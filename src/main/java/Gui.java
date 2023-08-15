@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Gui {
+    //TODO Fix the minor errors for the fields
     private JFrame menu = new JFrame("Text editor");
     private JTextArea textArea = new JTextArea();
     private JScrollPane scrollPane = new JScrollPane(textArea);
