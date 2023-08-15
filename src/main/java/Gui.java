@@ -9,36 +9,37 @@ public class Gui {
     private JFrame menu = new JFrame("Text editor");
     private JTextArea textArea = new JTextArea();
     private JScrollPane scrollPane = new JScrollPane(textArea);
-    private JPanel buttonPanel = new JPanel();
+    private JMenuBar buttonMenu = new JMenuBar();
     // This method returns a panel which holds all the buttons and their respective actions
-    public JPanel buttonPanel() {
-        JButton File = new JButton("File");
-        JButton New = new JButton("New");
-        JButton Open = new JButton("Open");
-        JButton Save = new JButton("Save");
-        JButton Search = new JButton("Search");
-        JButton View = new JButton("View");
-        JButton Manage = new JButton("Manage");
-        JButton Help = new JButton("Help");
-        JPopupMenu dropbox = new JPopupMenu();
+    public JMenuBar buttonPanel() {
+        JMenu FileMenu = new JMenu("File");
+        JMenuItem NewItem = new JMenuItem("New");
+        JMenuItem OpenItem = new JMenuItem("Open");
+        JMenuItem SaveItem = new JMenuItem("Save");
+        JMenuItem ExitItem = new JMenuItem("Exit");
+        JMenu Search = new JMenu("Search");
+        JMenu View = new JMenu("View");
+        JMenu Manage = new JMenu("Manage");
+        JMenu Help = new JMenu("Help");
 
-        dropbox.add(New);
-        dropbox.add(Open);
-        dropbox.add(Save);
+        FileMenu.add(NewItem);
+        FileMenu.add(OpenItem);
+        FileMenu.add(SaveItem);
+        FileMenu.add(ExitItem);
 
-        File.addActionListener(new ActionListener() {
+        ExitItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dropbox.show(File, 0, File.getHeight());
+                System.exit(0);
             }
         });
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        buttonPanel.add(File);
-        buttonPanel.add(Search);
-        buttonPanel.add(View);
-        buttonPanel.add(Manage);
-        buttonPanel.add(Help);
-        return buttonPanel;
+
+        buttonMenu.add(FileMenu);
+        buttonMenu.add(Search);
+        buttonMenu.add(View);
+        buttonMenu.add(Manage);
+        buttonMenu.add(Help);
+        return buttonMenu;
     }
    // The gui which displays the text editor
     public void textEditor() {
