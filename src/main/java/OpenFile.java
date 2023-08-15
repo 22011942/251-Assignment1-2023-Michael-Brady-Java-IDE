@@ -12,7 +12,7 @@ public class OpenFile {
         //Sets the File Directory Path
         //Filters to only show txt files
         final JFileChooser fileChooser = new JFileChooser("c:");
-        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("", "txt");
+        FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Normal Text File (*.txt)", "txt");
         fileChooser.setFileFilter(txtFilter);
 
         //Opens the file directory allowing the user to select a file to open
@@ -21,7 +21,6 @@ public class OpenFile {
 
             //Sets file to the selected files path
             File file = fileChooser.getSelectedFile();
-
             //Reads through the file
             try {
                 scanner = new Scanner(new BufferedReader(new FileReader(file)));
