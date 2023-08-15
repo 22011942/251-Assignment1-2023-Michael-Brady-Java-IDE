@@ -26,6 +26,17 @@ public class Gui {
         dropbox.add(Open);
         dropbox.add(Save);
 
+        //Open button action listener
+        Open.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                OpenFile openFile = new OpenFile();
+                openFile.openFile();
+                textArea.setText(null);
+                textArea.append(openFile.getText());
+            }
+        });
+
         File.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
