@@ -2,6 +2,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +30,31 @@ public class Gui {
         FileMenu.add(OpenItem);
         FileMenu.add(SaveItem);
         FileMenu.add(ExitItem);
+        SaveItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               JFileChooser saveFile = new JFileChooser();
+               saveFile.setCurrentDirectory(new File("C:"));
+               int answer = saveFile.showSaveDialog(null);
+
+               if (answer == JFileChooser.APPROVE_OPTION) {
+                   File savedFile;
+                   PrintWriter output = null;
+                   savedFile = new File(saveFile.getSelectedFile().getAbsolutePath());
+                   try {
+                       output = new PrintWriter(savedFile);
+                       output.println(textArea.getText());
+                   }
+                   catch (FileNotFoundException e1) {
+                       e1.printStackTrace();
+                   }
+                   finally {
+                       output.close();
+                   }
+               }
+
+            }
+        });
         //This is the new button, when pressed it opens a new window
         NewItem.addActionListener(new ActionListener() {
             @Override
