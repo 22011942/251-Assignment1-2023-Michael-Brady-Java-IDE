@@ -13,6 +13,12 @@ public class OpenFile {
         //Filters to only show txt files
         final JFileChooser fileChooser = new JFileChooser("c:");
         FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Normal Text File (*.txt)", "txt");
+        FileNameExtensionFilter odtFilter = new FileNameExtensionFilter("OpenDocument Text (*.odt)", "odt");
+        FileNameExtensionFilter cppFilter = new FileNameExtensionFilter("C++ Source Code (*.cpp)", "cpp");
+        FileNameExtensionFilter javaFilter = new FileNameExtensionFilter("Java Source Code (*.java)", "java");
+        fileChooser.setFileFilter(cppFilter);
+        fileChooser.setFileFilter(javaFilter);
+        fileChooser.setFileFilter(odtFilter);
         fileChooser.setFileFilter(txtFilter);
 
         //Opens the file directory allowing the user to select a file to open
@@ -21,29 +27,40 @@ public class OpenFile {
 
             //Sets file to the selected files path
             File file = fileChooser.getSelectedFile();
-            //Reads through the file
-            try {
-                scanner = new Scanner(new BufferedReader(new FileReader(file)));
-                try {
-                    while (scanner.hasNext()) {
-                        line = scanner.nextLine();
 
-                        // Breaks the loop if there are no more lines in the text file
-                        if (line == null) {
-                            break;
-                        } else {
-                            // Merges the text file into one large string, so it can be sent back to Gui class
-                            text = text + line + "\n";
+            //Checks if the chosen file is an odt
+            String filename = file.toString();
+            int index = filename.lastIndexOf('.');
+            String ext = filename.substring(index+1);
+            if (ext.equals("odt")) {
+                OdtReader odt = new OdtReader(filename);
+                text = odt.getText();
+            } else {
+
+                //Reads through the file
+                try {
+                    scanner = new Scanner(new BufferedReader(new FileReader(file)));
+                    try {
+                        while (scanner.hasNext()) {
+                            line = scanner.nextLine();
+
+                            // Breaks the loop if there are no more lines in the text file
+                            if (line == null) {
+                                break;
+                            } else {
+                                // Merges the text file into one large string, so it can be sent back to Gui class
+                                text = text + line + "\n";
+                            }
+                        }
+                        // Stops the scanner
+                    } finally {
+                        if (scanner!= null) {
+                            scanner.close();
                         }
                     }
-                    // Stops the scanner
-                } finally {
-                    if (scanner!= null) {
-                        scanner.close();
-                    }
+                } catch(IOException e) {
+                    e.printStackTrace();
                 }
-            } catch(IOException e) {
-                e.printStackTrace();
             }
         }
     }
