@@ -1,7 +1,13 @@
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
+import javax.swing.text.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -21,6 +27,7 @@ public class Gui {
         JMenuItem OpenItem = new JMenuItem("Open");
         JMenuItem SaveItem = new JMenuItem("Save");
         JMenuItem ExitItem = new JMenuItem("Exit");
+        JMenuItem PrintItem = new JMenuItem("Print");
         JMenu Search = new JMenu("Search");
         JMenu View = new JMenu("View");
         JMenu Manage = new JMenu("Manage");
@@ -30,6 +37,35 @@ public class Gui {
         FileMenu.add(OpenItem);
         FileMenu.add(SaveItem);
         FileMenu.add(ExitItem);
+        Manage.add(PrintItem);
+        //This is the print feature it uses the printable and printerjob libraries
+        PrintItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PrinterJob printJob = PrinterJob.getPrinterJob();
+                Printable printable = (graphics, pageFormat, pageIndex) -> {
+                    if (pageIndex > 0) {
+                        return Printable.NO_SUCH_PAGE;
+                    }
+                    //Graphics 2d is responsible for the visual aspects of the page
+                    Graphics2D graphic2d = (Graphics2D) graphics;
+                    graphic2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+
+                    textArea.print(graphic2d);
+                    return Printable.PAGE_EXISTS;
+                };
+                printJob.setPrintable(printable);
+
+                if (printJob.printDialog()) {
+                    try {
+                        printJob.print();
+                    } catch (PrinterException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+
+        });
         SaveItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
