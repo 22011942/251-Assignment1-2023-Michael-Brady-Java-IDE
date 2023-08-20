@@ -14,10 +14,12 @@ public class OpenFile {
         final JFileChooser fileChooser = new JFileChooser("c:");
         FileNameExtensionFilter txtFilter = new FileNameExtensionFilter("Normal Text File (*.txt)", "txt");
         FileNameExtensionFilter odtFilter = new FileNameExtensionFilter("OpenDocument Text (*.odt)", "odt");
+        FileNameExtensionFilter rtfFilter = new FileNameExtensionFilter("Rich Test Format (*.rtf)", "rtf");
         FileNameExtensionFilter cppFilter = new FileNameExtensionFilter("C++ Source Code (*.cpp)", "cpp");
         FileNameExtensionFilter javaFilter = new FileNameExtensionFilter("Java Source Code (*.java)", "java");
         fileChooser.setFileFilter(cppFilter);
         fileChooser.setFileFilter(javaFilter);
+        fileChooser.setFileFilter(rtfFilter);
         fileChooser.setFileFilter(odtFilter);
         fileChooser.setFileFilter(txtFilter);
 
@@ -28,11 +30,12 @@ public class OpenFile {
             //Sets file to the selected files path
             File file = fileChooser.getSelectedFile();
 
-            //Checks if the chosen file is an odt
+            //Checks the extension of the chosen file
             String filename = file.toString();
             int index = filename.lastIndexOf('.');
             String ext = filename.substring(index+1);
-            if (ext.equals("odt")) {
+
+            if (ext.equals("odt") || ext.equals("rtf")) {
                 OdtReader odt = new OdtReader(filename);
                 text = odt.getText();
             } else {
