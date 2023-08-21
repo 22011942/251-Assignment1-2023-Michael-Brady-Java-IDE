@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Gui {
-    //TODO Fix the minor errors for the fields
+    //TODO fix field errors
     private JFrame menu = new JFrame("Text editor");
     private JTextArea textArea = new JTextArea();
     private JScrollPane scrollPane = new JScrollPane(textArea);
@@ -27,7 +27,15 @@ public class Gui {
         FileMenu.add(OpenItem);
         FileMenu.add(SaveItem);
         FileMenu.add(ExitItem);
-
+        //This is the new button, when pressed it opens a new window
+        NewItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Gui call = new Gui();
+                call.textEditor();
+            }
+        });
+        //This is the exit button, when pressed it closes all windows
         ExitItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
