@@ -11,6 +11,9 @@ import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -114,10 +117,30 @@ public class Gui {
         buttonMenu.add(Help);
         return buttonMenu;
     }
+
+    private String time() {
+        LocalDateTime timeAndDate = LocalDateTime.now();
+        DateTimeFormatter formatTimeAndDate = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String data = timeAndDate.format(formatTimeAndDate);
+
+        return data;
+    }
+
+    private String OSData() {
+        String osName = System.getProperty("os.name");
+        String osVersion = System.getProperty("os.version");
+        String osData = osName + " " + osVersion;
+        return osData;
+    }
+
    // The gui which displays the text editor
     public void textEditor() {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
+        String data = OSData() + "    " + time();
+        textArea.insert(data, 0);
+
+
         menu.add(buttonPanel(), BorderLayout.NORTH);
         menu.add(scrollPane, BorderLayout.CENTER);
         menu.setSize(800,600);
