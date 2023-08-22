@@ -53,8 +53,17 @@ public class Gui {
                    }
                }
 
+        //Open button action listener
+        OpenItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                OpenFile openFile = new OpenFile();
+                openFile.openFile();
+                textArea.setText(null);
+                textArea.append(openFile.getText());
             }
         });
+
         //This is the new button, when pressed it opens a new window
         NewItem.addActionListener(new ActionListener() {
             @Override
@@ -74,6 +83,7 @@ public class Gui {
         buttonMenu.add(FileMenu);
         buttonMenu.add(Search);
         buttonMenu.add(View);
+        buttonMenu.add(OpenItem);
         buttonMenu.add(Manage);
         buttonMenu.add(Help);
         return buttonMenu;
