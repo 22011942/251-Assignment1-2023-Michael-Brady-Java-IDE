@@ -1,10 +1,19 @@
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
+import javax.swing.text.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +30,8 @@ public class Gui {
         JMenuItem OpenItem = new JMenuItem("Open");
         JMenuItem SaveItem = new JMenuItem("Save");
         JMenuItem ExitItem = new JMenuItem("Exit");
+        JMenuItem PrintItem = new JMenuItem("Print");
+        JMenuItem AboutItem = new JMenuItem("About");
         JMenu Search = new JMenu("Search");
         JMenu View = new JMenu("View");
         JMenu Manage = new JMenu("Manage");
@@ -30,6 +41,44 @@ public class Gui {
         FileMenu.add(OpenItem);
         FileMenu.add(SaveItem);
         FileMenu.add(ExitItem);
+        Manage.add(PrintItem);
+        View.add(AboutItem);
+
+        AboutItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null ,"Developers: Michael, Brady\nAbout: This is Java program is a IDE text editor which fulfills most of the functions of a conventional IDE", "About", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
+        //This is the print feature it uses the printable and printerjob libraries
+        PrintItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PrinterJob printJob = PrinterJob.getPrinterJob();
+                Printable printable = (graphics, pageFormat, pageIndex) -> {
+                    if (pageIndex > 0) {
+                        return Printable.NO_SUCH_PAGE;
+                    }
+                    //Graphics 2d is responsible for the visual aspects of the page
+                    Graphics2D graphic2d = (Graphics2D) graphics;
+                    graphic2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+
+                    textArea.print(graphic2d);
+                    return Printable.PAGE_EXISTS;
+                };
+                printJob.setPrintable(printable);
+
+                if (printJob.printDialog()) {
+                    try {
+                        printJob.print();
+                    } catch (PrinterException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+
+        });
         SaveItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,10 +137,31 @@ public class Gui {
         buttonMenu.add(Help);
         return buttonMenu;
     }
+
+    private String time() {
+        LocalDateTime timeAndDate = LocalDateTime.now();
+        DateTimeFormatter formatTimeAndDate = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String data = timeAndDate.format(formatTimeAndDate);
+
+        return data;
+    }
+
+    private String OSData() {
+        String osName = System.getProperty("os.name");
+        String osVersion = System.getProperty("os.version");
+        String osData = osName + " " + osVersion;
+        return osData;
+    }
+
+
    // The gui which displays the text editor
     public void textEditor() {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
+        String data = OSData() + "    " + time();
+        textArea.insert(data, 0);
+
+
         menu.add(buttonPanel(), BorderLayout.NORTH);
         menu.add(scrollPane, BorderLayout.CENTER);
         menu.setSize(800,600);
