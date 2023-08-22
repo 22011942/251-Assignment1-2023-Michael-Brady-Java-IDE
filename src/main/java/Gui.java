@@ -2,32 +2,59 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Gui {
+    //TODO fix field errors
     private JFrame menu = new JFrame("Text editor");
     private JTextArea textArea = new JTextArea();
     private JScrollPane scrollPane = new JScrollPane(textArea);
-    private JPanel buttonPanel = new JPanel();
+    private JMenuBar buttonMenu = new JMenuBar();
     // This method returns a panel which holds all the buttons and their respective actions
-    public JPanel buttonPanel() {
-        JButton File = new JButton("File");
-        JButton New = new JButton("New");
-        JButton Open = new JButton("Open");
-        JButton Save = new JButton("Save");
-        JButton Search = new JButton("Search");
-        JButton View = new JButton("View");
-        JButton Manage = new JButton("Manage");
-        JButton Help = new JButton("Help");
-        JPopupMenu dropbox = new JPopupMenu();
+    public JMenuBar buttonPanel() {
+        JMenu FileMenu = new JMenu("File");
+        JMenuItem NewItem = new JMenuItem("New");
+        JMenuItem OpenItem = new JMenuItem("Open");
+        JMenuItem SaveItem = new JMenuItem("Save");
+        JMenuItem ExitItem = new JMenuItem("Exit");
+        JMenu Search = new JMenu("Search");
+        JMenu View = new JMenu("View");
+        JMenu Manage = new JMenu("Manage");
+        JMenu Help = new JMenu("Help");
 
-        dropbox.add(New);
-        dropbox.add(Open);
-        dropbox.add(Save);
+        FileMenu.add(NewItem);
+        FileMenu.add(OpenItem);
+        FileMenu.add(SaveItem);
+        FileMenu.add(ExitItem);
+        SaveItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               JFileChooser saveFile = new JFileChooser();
+               saveFile.setCurrentDirectory(new File("C:"));
+               int answer = saveFile.showSaveDialog(null);
+
+               if (answer == JFileChooser.APPROVE_OPTION) {
+                   File savedFile;
+                   PrintWriter output = null;
+                   savedFile = new File(saveFile.getSelectedFile().getAbsolutePath());
+                   try {
+                       output = new PrintWriter(savedFile);
+                       output.println(textArea.getText());
+                   }
+                   catch (FileNotFoundException e1) {
+                       e1.printStackTrace();
+                   }
+                   finally {
+                       output.close();
+                   }
+               }
 
         //Open button action listener
-        Open.addActionListener(new ActionListener() {
+        OpenItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 OpenFile openFile = new OpenFile();
@@ -37,19 +64,29 @@ public class Gui {
             }
         });
 
-        File.addActionListener(new ActionListener() {
+        //This is the new button, when pressed it opens a new window
+        NewItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dropbox.show(File, 0, File.getHeight());
+                Gui call = new Gui();
+                call.textEditor();
             }
         });
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        buttonPanel.add(File);
-        buttonPanel.add(Search);
-        buttonPanel.add(View);
-        buttonPanel.add(Manage);
-        buttonPanel.add(Help);
-        return buttonPanel;
+        //This is the exit button, when pressed it closes all windows
+        ExitItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        buttonMenu.add(FileMenu);
+        buttonMenu.add(Search);
+        buttonMenu.add(View);
+        buttonMenu.add(OpenItem);
+        buttonMenu.add(Manage);
+        buttonMenu.add(Help);
+        return buttonMenu;
     }
    // The gui which displays the text editor
     public void textEditor() {
