@@ -31,6 +31,7 @@ public class Gui {
         JMenuItem SaveItem = new JMenuItem("Save");
         JMenuItem ExitItem = new JMenuItem("Exit");
         JMenuItem PrintItem = new JMenuItem("Print");
+        JMenuItem AboutItem = new JMenuItem("About");
         JMenu Search = new JMenu("Search");
         JMenu View = new JMenu("View");
         JMenu Manage = new JMenu("Manage");
@@ -41,6 +42,15 @@ public class Gui {
         FileMenu.add(SaveItem);
         FileMenu.add(ExitItem);
         Manage.add(PrintItem);
+        View.add(AboutItem);
+
+        AboutItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null ,"Developers: Michael, Brady\nAbout: This is Java program is a IDE text editor which fulfills most of the functions of a conventional IDE", "About", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
         //This is the print feature it uses the printable and printerjob libraries
         PrintItem.addActionListener(new ActionListener() {
             @Override
@@ -132,6 +142,7 @@ public class Gui {
         String osData = osName + " " + osVersion;
         return osData;
     }
+
 
    // The gui which displays the text editor
     public void textEditor() {
