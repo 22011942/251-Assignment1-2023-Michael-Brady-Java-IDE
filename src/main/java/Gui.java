@@ -14,8 +14,7 @@ public class Gui {
     private JTextArea textArea = new JTextArea();
     private JScrollPane scrollPane = new JScrollPane(textArea);
     private JMenuBar buttonMenu = new JMenuBar();
-    // This method returns a panel which holds all the buttons and their respective actions
-    public JMenuBar buttonPanel() {
+    public JMenuBar buttonMenu() {
         JMenu FileMenu = new JMenu("File");
         JMenuItem NewItem = new JMenuItem("New");
         JMenuItem OpenItem = new JMenuItem("Open");
@@ -33,25 +32,25 @@ public class Gui {
         SaveItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-               JFileChooser saveFile = new JFileChooser();
-               saveFile.setCurrentDirectory(new File("C:"));
-               int answer = saveFile.showSaveDialog(null);
+                JFileChooser saveFile = new JFileChooser();
+                saveFile.setCurrentDirectory(new File("C:"));
+                int answer = saveFile.showSaveDialog(null);
 
-               if (answer == JFileChooser.APPROVE_OPTION) {
-                   File savedFile;
-                   PrintWriter output = null;
-                   savedFile = new File(saveFile.getSelectedFile().getAbsolutePath());
-                   try {
-                       output = new PrintWriter(savedFile);
-                       output.println(textArea.getText());
-                   }
-                   catch (FileNotFoundException e1) {
-                       e1.printStackTrace();
-                   }
-                   finally {
-                       output.close();
-                   }
-               }
+                if (answer == JFileChooser.APPROVE_OPTION) {
+                    File savedFile;
+                    PrintWriter output = null;
+                    savedFile = new File(saveFile.getSelectedFile().getAbsolutePath());
+                    try {
+                        output = new PrintWriter(savedFile);
+                        output.println(textArea.getText());
+                    } catch (FileNotFoundException e1) {
+                        e1.printStackTrace();
+                    } finally {
+                        output.close();
+                    }
+                }
+            }
+        });
 
         //Open button action listener
         OpenItem.addActionListener(new ActionListener() {
@@ -79,11 +78,9 @@ public class Gui {
                 System.exit(0);
             }
         });
-
         buttonMenu.add(FileMenu);
         buttonMenu.add(Search);
         buttonMenu.add(View);
-        buttonMenu.add(OpenItem);
         buttonMenu.add(Manage);
         buttonMenu.add(Help);
         return buttonMenu;
@@ -92,7 +89,7 @@ public class Gui {
     public void textEditor() {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
-        menu.add(buttonPanel(), BorderLayout.NORTH);
+        menu.add(buttonMenu(), BorderLayout.NORTH);
         menu.add(scrollPane, BorderLayout.CENTER);
         menu.setSize(800,600);
         menu.setVisible(true);
