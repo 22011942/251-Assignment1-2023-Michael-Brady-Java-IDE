@@ -161,6 +161,6 @@ public class Gui {
         menu.add(scrollPane, BorderLayout.CENTER);
         menu.setSize(800,600);
         menu.setVisible(true);
-        menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        menu.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 }
