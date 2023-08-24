@@ -1,27 +1,24 @@
 import javax.swing.*;
-import javax.swing.text.JTextComponent;
 import java.awt.*;
-import javax.swing.text.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.fife.ui.rtextarea.*;
+import org.fife.ui.rsyntaxtextarea.*;
+
 
 public class Gui {
     //TODO fix field errors
     private JFrame menu = new JFrame("Text editor");
-    private JTextArea textArea = new JTextArea();
-    private JScrollPane scrollPane = new JScrollPane(textArea);
+    private RSyntaxTextArea textArea = new RSyntaxTextArea();
+    private RTextScrollPane  scrollPane = new RTextScrollPane (textArea);
     private JMenuBar buttonMenu = new JMenuBar();
     public JMenuBar buttonMenu() {
         JMenu FileMenu = new JMenu("File");
@@ -146,15 +143,19 @@ public class Gui {
     private String OSData() {
         String osName = System.getProperty("os.name");
         String osVersion = System.getProperty("os.version");
-        String osData = osName + " " + osVersion;
+        String osData = "//" + osName + " " + osVersion;
         return osData;
     }
+
 
 
    // The gui which displays the text editor
     public void textEditor() {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
+
+        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+        textArea.setCodeFoldingEnabled(true);
         menu.add(buttonMenu(), BorderLayout.NORTH);
         String data = OSData() + "    " + time();
         textArea.insert(data, 0);
