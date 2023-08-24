@@ -14,6 +14,7 @@ import org.fife.ui.rtextarea.*;
 import org.fife.ui.rsyntaxtextarea.*;
 
 
+
 public class Gui {
     //TODO fix field errors
     private JFrame menu = new JFrame("Text editor");
@@ -78,6 +79,7 @@ public class Gui {
         SaveItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 JFileChooser saveFile = new JFileChooser();
                 saveFile.setCurrentDirectory(new File("C:"));
                 int answer = saveFile.showSaveDialog(null);
@@ -153,6 +155,7 @@ public class Gui {
     public void textEditor() {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
+
 
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
         textArea.setCodeFoldingEnabled(true);
