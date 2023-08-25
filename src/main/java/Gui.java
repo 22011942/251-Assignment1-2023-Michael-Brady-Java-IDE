@@ -10,6 +10,8 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import org.fife.rsta.ac.LanguageSupportFactory;
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rsyntaxtextarea.*;
 
@@ -155,7 +157,13 @@ public class Gui {
     public void textEditor() {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
+        textArea.setCodeFoldingEnabled(true);
+        textArea.setAntiAliasingEnabled(true);
 
+        textArea.setMarkOccurrences(true);
+        textArea.setMarkOccurrencesDelay(1);
+
+        LanguageSupportFactory.get().register(textArea);
 
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
         textArea.setCodeFoldingEnabled(true);

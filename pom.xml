@@ -25,6 +25,11 @@
             <artifactId>rsyntaxtextarea</artifactId>
             <version>3.3.4</version>
         </dependency>
+        <dependency>
+            <groupId>com.fifesoft</groupId>
+            <artifactId>languagesupport</artifactId>
+            <version>3.3.0</version>
+        </dependency>
     </dependencies>
 
 </project>
