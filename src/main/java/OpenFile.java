@@ -65,9 +65,8 @@ public class OpenFile {
                     e.printStackTrace();
                 }
             }
+            Gui.textArea.setText(null);
+            Gui.textArea.append(text);
         }
-    }
-    public String getText() {
-        return text;
     }
 }
