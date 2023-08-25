@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -17,7 +16,7 @@ import org.fife.ui.rsyntaxtextarea.*;
 public class Gui {
     //TODO fix field errors
     private JFrame menu = new JFrame("Text editor");
-    private RSyntaxTextArea textArea = new RSyntaxTextArea();
+    public static RSyntaxTextArea textArea = new RSyntaxTextArea();
     private RTextScrollPane  scrollPane = new RTextScrollPane (textArea);
     private JMenuBar buttonMenu = new JMenuBar();
     public JMenuBar buttonMenu() {
@@ -104,8 +103,25 @@ public class Gui {
             public void actionPerformed(ActionEvent e) {
                 OpenFile openFile = new OpenFile();
                 openFile.openFile();
-                textArea.setText(null);
-                textArea.append(openFile.getText());
+            }
+        });
+
+        //Search
+        Search.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Start all Swing applications
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        try {
+                            String laf = UIManager.getSystemLookAndFeelClassName();
+                            UIManager.setLookAndFeel(laf);
+                        } catch (Exception e) { /* never happens */ }
+                        SearchWord searchWord = new SearchWord();
+                        searchWord.setVisible(true);
+                        textArea.requestFocusInWindow();
+                    }
+                });
             }
         });
 
