@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 import org.fife.rsta.ac.LanguageSupportFactory;
 import org.fife.ui.rtextarea.*;
@@ -17,11 +18,10 @@ import org.fife.ui.rsyntaxtextarea.*;
 
 
 public class Gui {
-    //TODO fix field errors
-    private JFrame menu = new JFrame("Text editor");
+    private final JFrame menu = new JFrame("Text editor");
     public static RSyntaxTextArea textArea = new RSyntaxTextArea();
-    private RTextScrollPane  scrollPane = new RTextScrollPane (textArea);
-    private JMenuBar buttonMenu = new JMenuBar();
+    private final RTextScrollPane  scrollPane = new RTextScrollPane (textArea);
+    private final JMenuBar buttonMenu = new JMenuBar();
     public JMenuBar buttonMenu() {
         JMenu FileMenu = new JMenu("File");
         JMenuItem NewItem = new JMenuItem("New");
@@ -33,7 +33,6 @@ public class Gui {
         JMenu Search = new JMenu("Search");
         JMenu View = new JMenu("View");
         JMenu Manage = new JMenu("Manage");
-        JMenu Help = new JMenu("Help");
 
         FileMenu.add(NewItem);
         FileMenu.add(OpenItem);
@@ -42,72 +41,57 @@ public class Gui {
         Manage.add(PrintItem);
         View.add(AboutItem);
 
-        AboutItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null ,"Developers: Michael, Brady\nAbout: This is Java program is a IDE text editor which fulfills most of the functions of a conventional IDE", "About", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
+        AboutItem.addActionListener(e -> JOptionPane.showMessageDialog(null ,"Developers: Michael, Brady\nAbout: This is Java program is a IDE text editor which fulfills most of the functions of a conventional IDE", "About", JOptionPane.INFORMATION_MESSAGE));
 
-        //This is the print feature it uses the printable and printerjob libraries
-        PrintItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PrinterJob printJob = PrinterJob.getPrinterJob();
-                Printable printable = (graphics, pageFormat, pageIndex) -> {
-                    if (pageIndex > 0) {
-                        return Printable.NO_SUCH_PAGE;
-                    }
-                    //Graphics 2d is responsible for the visual aspects of the page
-                    Graphics2D graphic2d = (Graphics2D) graphics;
-                    graphic2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+        //This is the print feature it uses the Printable and PrinterJob libraries
+        PrintItem.addActionListener(e -> {
+            PrinterJob printJob = PrinterJob.getPrinterJob();
+            Printable printable = (graphics, pageFormat, pageIndex) -> {
+                if (pageIndex > 0) {
+                    return Printable.NO_SUCH_PAGE;
+                }
+                //Graphics 2d is responsible for the visual aspects of the page
+                Graphics2D graphic2d = (Graphics2D) graphics;
+                graphic2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
 
-                    textArea.print(graphic2d);
-                    return Printable.PAGE_EXISTS;
-                };
-                printJob.setPrintable(printable);
+                textArea.print(graphic2d);
+                return Printable.PAGE_EXISTS;
+            };
+            printJob.setPrintable(printable);
 
-                if (printJob.printDialog()) {
-                    try {
-                        printJob.print();
-                    } catch (PrinterException ex) {
-                        ex.printStackTrace();
-                    }
+            if (printJob.printDialog()) {
+                try {
+                    printJob.print();
+                } catch (PrinterException ex) {
+                    ex.printStackTrace();
                 }
             }
-
         });
-        SaveItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        SaveItem.addActionListener(e -> {
 
-                JFileChooser saveFile = new JFileChooser();
-                saveFile.setCurrentDirectory(new File("C:"));
-                int answer = saveFile.showSaveDialog(null);
+            JFileChooser saveFile = new JFileChooser();
+            saveFile.setCurrentDirectory(new File("C:"));
+            int answer = saveFile.showSaveDialog(null);
 
-                if (answer == JFileChooser.APPROVE_OPTION) {
-                    File savedFile;
-                    PrintWriter output = null;
-                    savedFile = new File(saveFile.getSelectedFile().getAbsolutePath());
-                    try {
-                        output = new PrintWriter(savedFile);
-                        output.println(textArea.getText());
-                    } catch (FileNotFoundException e1) {
-                        e1.printStackTrace();
-                    } finally {
-                        output.close();
-                    }
+            if (answer == JFileChooser.APPROVE_OPTION) {
+                File savedFile;
+                PrintWriter output = null;
+                savedFile = new File(saveFile.getSelectedFile().getAbsolutePath());
+                try {
+                    output = new PrintWriter(savedFile);
+                    output.println(textArea.getText());
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                } finally {
+                    Objects.requireNonNull(output).close();
                 }
             }
         });
 
         //Open button action listener
-        OpenItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                OpenFile openFile = new OpenFile();
-                openFile.openFile();
-            }
+        OpenItem.addActionListener(e -> {
+            OpenFile openFile = new OpenFile();
+            openFile.openFile();
         });
 
         //Search
@@ -115,56 +99,42 @@ public class Gui {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // Start all Swing applications
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        try {
-                            String laf = UIManager.getSystemLookAndFeelClassName();
-                            UIManager.setLookAndFeel(laf);
-                        } catch (Exception e) { /* never happens */ }
-                        SearchWord searchWord = new SearchWord();
-                        searchWord.setVisible(true);
-                        textArea.requestFocusInWindow();
-                    }
+                SwingUtilities.invokeLater(() -> {
+                    try {
+                        String laf = UIManager.getSystemLookAndFeelClassName();
+                        UIManager.setLookAndFeel(laf);
+                    } catch (Exception e12) { /* never happens */ }
+                    SearchWord searchWord = new SearchWord();
+                    searchWord.setVisible(true);
+                    textArea.requestFocusInWindow();
                 });
             }
         });
 
         //This is the new button, when pressed it opens a new window
-        NewItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Gui call = new Gui();
-                call.textEditor();
-            }
+        NewItem.addActionListener(e -> {
+            Gui call = new Gui();
+            call.textEditor();
         });
         //This is the exit button, when pressed it closes all windows
-        ExitItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.exit(0);
-            }
-        });
+        ExitItem.addActionListener(e -> System.exit(0));
         buttonMenu.add(FileMenu);
         buttonMenu.add(Search);
         buttonMenu.add(View);
         buttonMenu.add(Manage);
-        buttonMenu.add(Help);
         return buttonMenu;
     }
 
     private String time() {
         LocalDateTime timeAndDate = LocalDateTime.now();
         DateTimeFormatter formatTimeAndDate = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-        String data = timeAndDate.format(formatTimeAndDate);
-
-        return data;
+        return timeAndDate.format(formatTimeAndDate);
     }
 
     private String OSData() {
         String osName = System.getProperty("os.name");
         String osVersion = System.getProperty("os.version");
-        String osData = "//" + osName + " " + osVersion;
-        return osData;
+        return "//" + osName + " " + osVersion;
     }
 
 
