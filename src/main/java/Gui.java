@@ -6,14 +6,19 @@ import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.fife.rsta.ac.LanguageSupportFactory;
 import org.fife.ui.rtextarea.*;
 import org.fife.ui.rsyntaxtextarea.*;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
 
 
 
@@ -67,8 +72,8 @@ public class Gui {
                 }
             }
         });
+        //This the save function when checks if you are just saving as .txt or as a .pdf
         SaveItem.addActionListener(e -> {
-
             JFileChooser saveFile = new JFileChooser();
             saveFile.setCurrentDirectory(new File("C:"));
             int answer = saveFile.showSaveDialog(null);
@@ -77,13 +82,44 @@ public class Gui {
                 File savedFile;
                 PrintWriter output = null;
                 savedFile = new File(saveFile.getSelectedFile().getAbsolutePath());
-                try {
-                    output = new PrintWriter(savedFile);
-                    output.println(textArea.getText());
-                } catch (FileNotFoundException e1) {
-                    e1.printStackTrace();
-                } finally {
-                    Objects.requireNonNull(output).close();
+                //Here it check whether you are trying to save the file as a pdf
+                if (savedFile.getName().toLowerCase().endsWith(".pdf")) {
+                    savedFile = new File(savedFile.getAbsolutePath() + ".pdf");
+                    try {
+                        PDDocument document = new PDDocument();
+                        PDPage page = new PDPage();
+                        document.addPage(page);
+                        PDPageContentStream contentStream = new PDPageContentStream(document, page);
+                        contentStream.beginText();
+                        contentStream.setFont(PDType1Font.COURIER, 12);
+                        contentStream.newLineAtOffset(50, 750);
+                        contentStream.setLeading(14);
+                        //Cleans up all the texts and changes tabs into spaces so the font can comprehend it
+                        String cleanedText = textArea.getText().replace("\t", "    ");
+                        //Loop that gets each line from the text and inserts it into the pdf
+                        for (String line : cleanedText.split("\\n")) {
+                            contentStream.showText(line);
+                            contentStream.newLine();
+                        }
+
+                        contentStream.endText();
+                        contentStream.close();
+                        document.save(savedFile);
+                        document.close();
+
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                } else {
+                    try {
+                        //this is the normal output of the save when you just do .txt
+                        output = new PrintWriter(savedFile);
+                        output.println(textArea.getText());
+                    } catch (FileNotFoundException e1) {
+                        e1.printStackTrace();
+                    } finally {
+                        Objects.requireNonNull(output).close();
+                    }
                 }
             }
         });
@@ -124,13 +160,13 @@ public class Gui {
         buttonMenu.add(Manage);
         return buttonMenu;
     }
-
+    //Gets the local date and time
     private String time() {
         LocalDateTime timeAndDate = LocalDateTime.now();
         DateTimeFormatter formatTimeAndDate = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
         return timeAndDate.format(formatTimeAndDate);
     }
-
+    //Gets the System name and version
     private String OSData() {
         String osName = System.getProperty("os.name");
         String osVersion = System.getProperty("os.version");
