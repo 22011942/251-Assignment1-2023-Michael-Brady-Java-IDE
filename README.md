@@ -11,9 +11,11 @@
 4. There is predictive code for what you're typing when doing ctrl-space. When you click a word all instances of it in the text editor are highlighted.
 
 ### Libraries used
-##### Aspose words:
+#### Aspose words:
     Used to create, modify, render, or parse documents. It was used in the open function for its capabilities in opening a wide variety of document types.
 #### RSyntaxTextArea:
     It has many features such as syntax highlighting, Find/Replace, Mark Occurrences, and much more. It was mainly used to add syntax highlighting, the search feature, animations, and the stylized UI.
-#### RSTALanguageSupport
+#### RSTALanguageSupport:
     The main feature it has is language support for various languages which means it can auto-complete function names and Parsers for the language used. This was implemented to help predict what you might want to write by using ctrl-space.
+#### pdfbox:
+    It allows for the manipulation of pdf files. This library was used to allow for documents to be saved as pdfs. To save as a pdf just end the file name with a .pdf.
