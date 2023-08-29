@@ -1,5 +1,4 @@
 # 251-Assignment1-2023-Michael-Brady
-# 251-Assignment1-2023-Michael-Brady
 1. Michael Polianski 22011942 | Brady Parkinson 22011853
 2. To run the program simply run the main class and it should open the text editor for you to use. The src folder contains all the .java files.
 3.  Significant Commits for Michael:
